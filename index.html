@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Interactive Form</title>
+  <style>
+    body {
+      min-height: 100vh;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center; /* Centers vertically */
+      background: #f4fafc;
+      font-family: Arial, sans-serif;
+    }
+    .form-container {
+      background: #fff;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+      min-width: 300px;
+      max-width: 350px;
+      width: 100%;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 1.2rem;
+    }
+    label {
+      display: block;
+      margin: 1rem 0 0.3rem 0;
+      font-size: 1rem;
+      color: #222;
+    }
+    input[type="text"], input[type="email"], input[type="password"] {
+      width: 100%;
+      padding: 0.7rem;
+      border: 1px solid #c4e3eb;
+      border-radius: 4px;
+      outline: none;
+      font-size: 1rem;
+      margin-bottom: 0.4rem;
+    }
+    .error {
+      color: #d32f2f;
+      font-size: 0.95rem;
+      margin-bottom: 0.4rem;
+      min-height: 1.2em;
+    }
+    button[type="submit"] {
+      width: 100%;
+      background: #2faad3;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      padding: 0.9rem;
+      font-size: 1rem;
+      cursor: pointer;
+      margin-top: 0.7rem;
+      transition: background 0.2s;
+    }
+    button[type="submit"]:hover {
+      background: #257fa6;
+    }
+    .success {
+      color: #197d29;
+      text-align: center;
+      margin-top: 1rem;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <h2>Sign Up</h2>
+    <form id="signupForm" novalidate>
+      <label for="name">Name</label>
+      <input type="text" id="name" name="name" required />
+      <div class="error" id="nameError"></div>  
+
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" required />
+      <div class="error" id="emailError"></div>
+
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password" required />
+      <div class="error" id="passwordError"></div>
+
+      <button type="submit">Submit</button>
+      <div class="success" id="successMsg"></div>
+    </form>
+  </div>
+
+  <script>
+    const form = document.getElementById("signupForm");
+    const nameInput = document.getElementById("name");
+    const emailInput = document.getElementById("email");
+    const passwordInput = document.getElementById("password");
+
+    const nameError = document.getElementById("nameError");
+    const emailError = document.getElementById("emailError");
+    const passwordError = document.getElementById("passwordError");
+    const successMsg = document.getElementById("successMsg");
+
+    // Validation functions
+    function validateName() {
+      if (nameInput.value.trim() === "") {
+        nameError.textContent = "Name is required.";
+        return false;
+      }
+      nameError.textContent = "";
+      return true;
+    }
+
+    function validateEmail() {
+      const emailValue = emailInput.value.trim();
+      // Simple email regex
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailValue) {
+        emailError.textContent = "Email is required.";
+        return false;
+      } else if (!emailRegex.test(emailValue)) {
+        emailError.textContent = "Enter a valid email address.";
+        return false;
+      }
+      emailError.textContent = "";
+      return true;
+    }
+
+    function validatePassword() {
+      const value = passwordInput.value;
+      if (!value) {
+        passwordError.textContent = "Password is required.";
+        return false;
+      } else if (value.length < 6) {
+        passwordError.textContent = "Password should be at least 6 characters.";
+        return false;
+      }
+      passwordError.textContent = "";
+      return true;
+    }
+
+    // Event listeners for real-time feedback
+    nameInput.addEventListener("blur", validateName);
+    nameInput.addEventListener("input", validateName);
+
+    emailInput.addEventListener("blur", validateEmail);
+    emailInput.addEventListener("input", validateEmail);
+
+    passwordInput.addEventListener("blur", validatePassword);
+    passwordInput.addEventListener("input", validatePassword);
+
+    form.addEventListener("submit", function(e) {
+      e.preventDefault();
+      successMsg.textContent = ""; // Clear message
+      // Validate all fields before submission
+      const nameValid = validateName();
+      const emailValid = validateEmail();
+      const passwordValid = validatePassword();
+
+      if (nameValid && emailValid && passwordValid) {
+        successMsg.textContent = "Form submitted successfully!";
+        form.reset();
+        nameError.textContent = "";
+        emailError.textContent = "";
+        passwordError.textContent = "";
+      }
+    });
+  </script>
+</body>
+</html>
